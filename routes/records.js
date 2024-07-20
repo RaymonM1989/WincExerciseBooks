@@ -1,4 +1,5 @@
 import express from 'express';
+import auth from '../middleware/auth.js';
 import getRecords from '../services/records/getRecords.js';
 import getRecordById from '../services/records/getRecordById.js';
 import createRecord from '../services/records/createRecord.js';
@@ -13,27 +14,27 @@ router.get('/', (req, res) =>
     {
         const { artist, genre, available } = req.query;
         const records = getRecords(artist, genre, available);
-        res.status(200).json(records);
+        return res.status(200).json(records);
     }
     catch (error)
     {
         console.error(error);
-        res.status(500).send("Something went wrong while getting list of records!");
+        return res.status(500).send("Something went wrong while getting list of records!");
     }
 });
 
-router.post('/', (req, res) =>
+router.post('/', auth, (req, res) =>
 {
     try
     {
         const { title, artist, year, available, genre } = req.body;
         const newRecord = createRecord(title, artist, year, available, genre);
-        res.status(201).json(newRecord);
+        return res.status(201).json(newRecord);
     }
     catch (error)
     {
         console.error(error);
-        res.status(500).send('Something went wrong while creating the new record!');
+        return res.status(500).send('Something went wrong while creating the new record!');
     }
 });
 
@@ -46,37 +47,37 @@ router.get('/:id', (req, res) =>
 
         if (!book)
         {
-            res.status(404).send(`Book with ID ${id} was not found!`);
+            return res.status(404).send(`Book with ID ${id} was not found!`);
         }
         else
         {
-            res.status(200).json(record);
+            return res.status(200).json(record);
         }
     }
     catch (error)
     {
         console.error(error);
-        res.status(500).send('Something went wrong while getting record by ID!');
+        return res.status(500).send('Something went wrong while getting record by ID!');
     }
 });
 
-router.put('/:id', (req, res) =>
+router.put('/:id', auth, (req, res) =>
 {
     try
     {
         const { id }= req.params;
         const { title, artist, year, available, genre } = req.body;
         const updatedRecord = updateRecordById(id, title, artist, year, available, genre);
-        res.status(200).json(updatedRecord);
+        return res.status(200).json(updatedRecord);
     }
     catch (error)
     {
         console.error(error);
-        res.status(500).send('Something went wrong while updating this record!');
+        return res.status(500).send('Something went wrong while updating this record!');
     }
 });
 
-router.delete('/ :id', (req, res) =>
+router.delete('/ :id', auth, (req, res) =>
 {
     try
     {
@@ -85,16 +86,18 @@ router.delete('/ :id', (req, res) =>
 
         if (!deletedBookId)
         {
-            res.status(404).send(`Record with ID ${id} was not found!`);
+            return res.status(404).send(`Record with ID ${id} was not found!`);
         }
         else
         {
-            res.status(200).json( { message: `Record with ID ${deletedBookId} was deleted!` } );
+            return res.status(200).json( { message: `Record with ID ${deletedBookId} was deleted!` } );
         }
     }
     catch (error)
     {
         console.error(error);
-        res.status(500).send('Something went wrong wile deleting that record!');
+        return res.status(500).send('Something went wrong wile deleting that record!');
     }
 });
+
+export default router;

@@ -1,6 +1,9 @@
 import express from 'express';
+import 'dotenv/config';
 import booksRouter from './routes/books.js';
 import recordsRouter from './routes/records.js';
+import loginRouter from './routes/login.js';
+
 
 
 const app = express();
@@ -8,6 +11,7 @@ app.use(express.json());
 
 app.use('/books', booksRouter);
 app.use('/records', recordsRouter);
+app.use('/login', loginRouter);
 
 app.get('/', (req, res) => 
     {

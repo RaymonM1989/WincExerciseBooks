@@ -1,21 +1,20 @@
-import bookData from '../../data/books.json' assert { type: "json" };
+import recordData from '../../data/records.json' assert { type: "json" };
 import { v4 as uuid } from 'uuid';
 
-const createBook = (title, author, isbn, pages, available, genre) =>
+const createRecord = (title, artist, year, available, genre) =>
 {
-    const newBook =
+    const newRecord =
     {
         id: uuid(),
         title,
-        author,
-        isbn,
-        pages,
+        artist,
+        year,
         available,
         genre,
     };
 
-    bookData.books.push(newBook);
-    return newBook;
+    recordData.records.push(newRecord);
+    return newRecord;
 }
 
-export default createBook;
+export default createRecord;
